@@ -70,10 +70,14 @@ public class TiempoEstudioDiaService implements ITiempoEstudioDiaService {
         TiempoEstudioDia entity = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
 
+        Usuario usuario = usuarioService.traerUsuarioEntity(dto.getUsuarioId());
+
         entity.setFecha(dto.getFecha());
         entity.setMinutosEstudiados(dto.getMinutosEstudiados());
+        entity.setUsuario(usuario);
 
         return Mapper.toDto(repo.save(entity));
     }
+
 
 }
