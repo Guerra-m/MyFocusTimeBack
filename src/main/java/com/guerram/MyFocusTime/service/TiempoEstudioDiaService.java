@@ -11,17 +11,30 @@ public class TiempoEstudioDiaService implements ITiempoEstudioDiaService {
     TiempoEstudioDiaRepository repo;
 
     @Override
-    public TiempoEstudioDiaDTO traerTiempo(Long id) {
-        return null;
-    }
-
-    @Override
     public TiempoEstudioDiaDTO crearTiempo(TiempoEstudioDiaDTO dto) {
+
         return null;
     }
 
     @Override
     public TiempoEstudioDiaDTO actualizarTiempo(Long id, TiempoEstudioDiaDTO dto) {
+
         return null;
     }
+
+    @Override
+    public TiempoEstudioDiaDTO traerTiempoSemanal(Long idUsuario, int fecha) {
+        return null;
+    }
+
+    @Override
+    public TiempoEstudioDiaDTO traerTiempoMes(Long idUsuario, int fecha) {
+        return null;
+    }
+
+    @Override
+    public TiempoEstudioDiaDTO traerTiempoAnio(Long idUsuario, int fecha) {
+        return null;
+    }
+
 }
