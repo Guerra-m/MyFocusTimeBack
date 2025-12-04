@@ -67,7 +67,13 @@ public class TiempoEstudioDiaService implements ITiempoEstudioDiaService {
 
     @Override
     public TiempoEstudioDiaDTO actualizarTiempo(Long id, TiempoEstudioDiaDTO dto) {
+        TiempoEstudioDia entity = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
 
-        return null;
+        entity.setFecha(dto.getFecha());
+        entity.setMinutosEstudiados(dto.getMinutosEstudiados());
+
+        return Mapper.toDto(repo.save(entity));
     }
+
 }
