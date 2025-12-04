@@ -31,6 +31,9 @@ public class UsuarioService implements IUsuarioService {
                 .map(Mapper::toDto)
                 .orElseThrow(()-> new RuntimeException("Usuario no encontrado."));
     }
+    public Usuario traerUsuarioEntity(Long id){
+        return repo.findById(id).orElseThrow(()->new RuntimeException("Usuario no encontrado"));
+    }
 
     public UsuarioDTO login (String mail, String password) {
         Usuario usuario = repo.findByMail(mail)

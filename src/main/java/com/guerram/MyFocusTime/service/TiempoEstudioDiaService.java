@@ -1,19 +1,68 @@
 package com.guerram.MyFocusTime.service;
 
 import com.guerram.MyFocusTime.dto.TiempoEstudioDiaDTO;
+import com.guerram.MyFocusTime.mapper.Mapper;
+import com.guerram.MyFocusTime.model.TiempoEstudioDia;
+import com.guerram.MyFocusTime.model.Usuario;
 import com.guerram.MyFocusTime.repository.TiempoEstudioDiaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TiempoEstudioDiaService implements ITiempoEstudioDiaService {
     @Autowired
     TiempoEstudioDiaRepository repo;
+    @Autowired
+    private IUsuarioService usuarioService;
 
     @Override
     public TiempoEstudioDiaDTO crearTiempo(TiempoEstudioDiaDTO dto) {
+        Usuario usuario = usuarioService.traerUsuarioEntity(dto.getUsuarioId());
 
-        return null;
+        TiempoEstudioDia entity = TiempoEstudioDia.builder()
+                .fecha(dto.getFecha())
+                .minutosEstudiados(dto.getMinutosEstudiados())
+                .usuario(usuario)
+                .build();
+
+        return Mapper.toDto(repo.save(entity));
+    }
+
+    @Override
+    public List<TiempoEstudioDiaDTO> traerTiempoSemanal(Long idUsuario, LocalDate fechaReferencia) {
+        LocalDate lunes = fechaReferencia.with(DayOfWeek.MONDAY);
+        LocalDate domingo = fechaReferencia.with(DayOfWeek.SUNDAY);
+
+        return repo.findByUsuarioIdAndFechaBetween(idUsuario, lunes, domingo)
+                .stream()
+                .map(Mapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<TiempoEstudioDiaDTO> traerTiempoMes(Long idUsuario, LocalDate fechaReferencia) {
+        LocalDate inicioMes = fechaReferencia.withDayOfMonth(1);
+        LocalDate finMes = fechaReferencia.withDayOfMonth(fechaReferencia.lengthOfMonth());
+
+        return repo.findByUsuarioIdAndFechaBetween(idUsuario, inicioMes, finMes)
+                .stream()
+                .map(Mapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<TiempoEstudioDiaDTO> traerTiempoAnio(Long idUsuario, LocalDate fechaReferencia) {
+        LocalDate inicioAnio = fechaReferencia.withDayOfYear(1);
+        LocalDate finAnio = fechaReferencia.withDayOfYear(fechaReferencia.lengthOfYear());
+
+        return repo.findByUsuarioIdAndFechaBetween(idUsuario, inicioAnio, finAnio)
+                .stream()
+                .map(Mapper::toDto)
+                .toList();
     }
 
     @Override
@@ -21,20 +70,4 @@ public class TiempoEstudioDiaService implements ITiempoEstudioDiaService {
 
         return null;
     }
-
-    @Override
-    public TiempoEstudioDiaDTO traerTiempoSemanal(Long idUsuario, int fecha) {
-        return null;
-    }
-
-    @Override
-    public TiempoEstudioDiaDTO traerTiempoMes(Long idUsuario, int fecha) {
-        return null;
-    }
-
-    @Override
-    public TiempoEstudioDiaDTO traerTiempoAnio(Long idUsuario, int fecha) {
-        return null;
-    }
-
 }

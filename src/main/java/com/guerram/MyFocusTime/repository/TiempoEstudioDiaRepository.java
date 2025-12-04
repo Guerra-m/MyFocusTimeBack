@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface TiempoEstudioDiaRepository extends JpaRepository<TiempoEstudioDiaRepository, Long> {
+public interface TiempoEstudioDiaRepository extends JpaRepository<TiempoEstudioDia, Long> {
     List<TiempoEstudioDia> findByUsuarioIdAndFechaBetween(Long idUsuario, LocalDate inicio, LocalDate fin);
 
 }
