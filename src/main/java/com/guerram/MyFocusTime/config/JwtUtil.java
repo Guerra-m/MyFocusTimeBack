@@ -13,12 +13,9 @@ public class JwtUtil {
     private final Key SECRET_KEY;
 
     public JwtUtil() {
-        // Leer la clave de entorno
-        String secret = System.getenv("JWT_SECRET");
-        if (secret == null || secret.isEmpty()) {
-            throw new RuntimeException("JWT_SECRET no está configurada en las variables de entorno");
-        }
-        SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes()); // Crear Key a partir de la variable
+        // Clave secreta hardcodeada (para desarrollo)
+        String secret = "Q8v#pT2wL9z!rF4xD7yM3kH6nU1sB0jA"; // <- reemplaza por la que quieras
+        SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String generateToken(Long userId, String mail){
