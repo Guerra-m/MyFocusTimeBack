@@ -20,8 +20,9 @@ public class TiempoEstudioDiaService implements ITiempoEstudioDiaService {
     private IUsuarioService usuarioService;
 
     @Override
-    public TiempoEstudioDiaDTO crearTiempo(TiempoEstudioDiaDTO dto) {
-        Usuario usuario = usuarioService.traerUsuarioEntity(dto.getUsuarioId());
+    public TiempoEstudioDiaDTO crearTiempo(Long userId, TiempoEstudioDiaDTO dto) {
+
+        Usuario usuario = usuarioService.traerUsuarioEntity(userId);
 
         TiempoEstudioDia entity = TiempoEstudioDia.builder()
                 .fecha(dto.getFecha())
@@ -31,6 +32,7 @@ public class TiempoEstudioDiaService implements ITiempoEstudioDiaService {
 
         return Mapper.toDto(repo.save(entity));
     }
+
 
     @Override
     public List<TiempoEstudioDiaDTO> traerTiempoSemanal(Long idUsuario, LocalDate fechaReferencia) {
@@ -66,18 +68,21 @@ public class TiempoEstudioDiaService implements ITiempoEstudioDiaService {
     }
 
     @Override
-    public TiempoEstudioDiaDTO actualizarTiempo(Long id, TiempoEstudioDiaDTO dto) {
+    public TiempoEstudioDiaDTO actualizarTiempo(Long userId, Long id, TiempoEstudioDiaDTO dto) {
         TiempoEstudioDia entity = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
 
-        Usuario usuario = usuarioService.traerUsuarioEntity(dto.getUsuarioId());
+        // Validación de seguridad: el registro pertenece al usuario autenticado
+        if (!entity.getUsuario().getId().equals(userId)) {
+            throw new RuntimeException("No puedes editar registros de otro usuario");
+        }
 
         entity.setFecha(dto.getFecha());
         entity.setMinutosEstudiados(dto.getMinutosEstudiados());
-        entity.setUsuario(usuario);
 
         return Mapper.toDto(repo.save(entity));
     }
+
 
 
 }

@@ -5,6 +5,7 @@ import com.guerram.MyFocusTime.service.ITiempoEstudioDiaService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -18,19 +19,29 @@ public class TiempoEstudioDiaController {
     private ITiempoEstudioDiaService service;
 
     // Crear registro diario
+
     @PostMapping("/crear")
-    public TiempoEstudioDiaDTO crearTiempo(@RequestBody TiempoEstudioDiaDTO dto) {
-        return service.crearTiempo(dto);
+    public ResponseEntity<?> crearTiempo(
+            @RequestBody TiempoEstudioDiaDTO dto,
+            HttpServletRequest request) {
+
+        Long userId = (Long) request.getAttribute("userId");
+
+        service.crearTiempo(userId, dto);
+
+        return ResponseEntity.ok("Tiempo guardado");
     }
 
     @GetMapping("/semanal")
     public List<TiempoEstudioDiaDTO> traerTiempoSemanal(
             HttpServletRequest request,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha
-    ) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+
         Long userId = (Long) request.getAttribute("userId");
+
         return service.traerTiempoSemanal(userId, fecha);
     }
+
 
 
     // Tiempo mensual
@@ -51,11 +62,16 @@ public class TiempoEstudioDiaController {
         return service.traerTiempoAnio(idUsuario, fecha);
     }
     @PutMapping("/actualizar/{id}")
-    public TiempoEstudioDiaDTO actualizarTiempo(
+    public ResponseEntity<?> actualizar(
             @PathVariable Long id,
-            @RequestBody TiempoEstudioDiaDTO dto) {
+            @RequestBody TiempoEstudioDiaDTO dto,
+            HttpServletRequest request) {
 
-        return service.actualizarTiempo(id, dto);
+        Long userId = (Long) request.getAttribute("userId");
+
+        service.actualizarTiempo(userId, id, dto);
+
+        return ResponseEntity.ok("Actualizado correctamente");
     }
 
     /*Llamada desde el front

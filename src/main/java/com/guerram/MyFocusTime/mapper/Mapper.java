@@ -27,7 +27,6 @@ public class Mapper {
                 .id(entidad.getId())
                 .fecha(entidad.getFecha())
                 .minutosEstudiados(entidad.getMinutosEstudiados())
-                .usuarioId(entidad.getUsuario().getId())
                 .build();
     }
 }
