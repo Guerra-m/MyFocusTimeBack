@@ -2,6 +2,7 @@ package com.guerram.MyFocusTime.controller;
 
 import com.guerram.MyFocusTime.dto.TiempoEstudioDiaDTO;
 import com.guerram.MyFocusTime.service.ITiempoEstudioDiaService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +23,15 @@ public class TiempoEstudioDiaController {
         return service.crearTiempo(dto);
     }
 
-    // Tiempo semanal
-    @GetMapping("/semanal/{idUsuario}")
+    @GetMapping("/semanal")
     public List<TiempoEstudioDiaDTO> traerTiempoSemanal(
-            @PathVariable Long idUsuario,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
-
-        return service.traerTiempoSemanal(idUsuario, fecha);
+            HttpServletRequest request,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha
+    ) {
+        Long userId = (Long) request.getAttribute("userId");
+        return service.traerTiempoSemanal(userId, fecha);
     }
+
 
     // Tiempo mensual
     @GetMapping("/mensual/{idUsuario}")

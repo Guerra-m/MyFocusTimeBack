@@ -11,4 +11,5 @@ public class UsuarioDTO {
     private String name;
     private String mail;
     private Rol rol;
+    private String token;
 }

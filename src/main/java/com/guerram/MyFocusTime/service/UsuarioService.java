@@ -1,5 +1,6 @@
 package com.guerram.MyFocusTime.service;
 
+import com.guerram.MyFocusTime.config.JwtUtil;
 import com.guerram.MyFocusTime.dto.UsuarioCreateDTO;
 import com.guerram.MyFocusTime.dto.UsuarioDTO;
 import com.guerram.MyFocusTime.mapper.Mapper;
@@ -15,6 +16,8 @@ public class UsuarioService implements IUsuarioService {
     @Autowired
     private UsuarioRepository repo;
 
+    @Autowired
+    private JwtUtil jwtUtil;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -46,6 +49,10 @@ public class UsuarioService implements IUsuarioService {
         if(!passwordEncoder.matches(password, usuario.getPassword())){
             throw new RuntimeException("Contraseña incorrecta");
         }
-        return Mapper.toDto(usuario);
+        String token = jwtUtil.generateToken(usuario.getId(), usuario.getMail());
+
+        UsuarioDTO dto = Mapper.toDto(usuario);
+        dto.setToken(token);
+        return dto;
     }
 }
