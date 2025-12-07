@@ -7,6 +7,7 @@ import com.guerram.MyFocusTime.model.Rol;
 import com.guerram.MyFocusTime.model.Usuario;
 import com.guerram.MyFocusTime.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,12 +15,15 @@ public class UsuarioService implements IUsuarioService {
     @Autowired
     private UsuarioRepository repo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UsuarioDTO crearUsuario(UsuarioCreateDTO dto) {
         Usuario usuario = Usuario.builder()
                 .name(dto.getName())
                 .mail(dto.getMail())
-                .password(dto.getPassword())
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .rol(Rol.USER)
                 .build();
         return Mapper.toDto(repo.save(usuario));
@@ -38,7 +42,8 @@ public class UsuarioService implements IUsuarioService {
     public UsuarioDTO login (String mail, String password) {
         Usuario usuario = repo.findByMail(mail)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        if(!usuario.getPassword().equals(password)){
+
+        if(!passwordEncoder.matches(password, usuario.getPassword())){
             throw new RuntimeException("Contraseña incorrecta");
         }
         return Mapper.toDto(usuario);
