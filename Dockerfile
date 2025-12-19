@@ -1,21 +1,26 @@
-# Usamos la imagen oficial de OpenJDK 17 (compatible con Spring Boot)
-FROM eclipse-temurin:17-jdk-alpine
+# Imagen base con Maven y Java 17
+FROM maven:3.9.2-eclipse-temurin-17 AS build
 
-# Directorio de trabajo dentro del contenedor
+# Directorio de trabajo
 WORKDIR /app
 
-# Copiamos el archivo pom.xml y descargamos dependencias (cacheo de dependencias)
+# Copiamos pom.xml y descargamos dependencias (cache)
 COPY pom.xml .
-RUN ./mvnw dependency:go-offline -B
+RUN mvn dependency:go-offline -B
 
-# Copiamos todo el proyecto
-COPY . .
+# Copiamos el resto del proyecto
+COPY src ./src
 
-# Compilamos el proyecto y generamos el jar
-RUN ./mvnw clean package -DskipTests
+# Construimos el JAR
+RUN mvn package -DskipTests
 
-# Expone el puerto que usa tu app (8080)
-EXPOSE 8080
+# Imagen final solo con Java para ejecutar la app
+FROM eclipse-temurin:17-jdk
 
-# Comando para correr la aplicación
-CMD ["java", "-jar", "target/MyFocusTime-0.0.1-SNAPSHOT.jar"]
+WORKDIR /app
+
+# Copiamos el JAR construido
+COPY --from=build /app/target/MyFocusTime-0.0.1-SNAPSHOT.jar app.jar
+
+# Comando para ejecutar la app
+ENTRYPOINT ["java","-jar","app.jar"]
