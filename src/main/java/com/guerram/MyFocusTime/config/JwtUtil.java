@@ -14,7 +14,7 @@ public class JwtUtil {
 
     public JwtUtil() {
         // Clave secreta hardcodeada (para desarrollo)
-        String secret = "Q8v#pT2wL9z!rF4xD7yM3kH6nU1sB0jA"; // <- reemplaza por la que quieras
+        String secret = "Q8v#pT2wL9z!rF4xD7yM3kH6nU1sB0jA";
         SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
