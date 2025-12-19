@@ -45,22 +45,25 @@ public class TiempoEstudioDiaController {
 
 
     // Tiempo mensual
-    @GetMapping("/mensual/{idUsuario}")
+    @GetMapping("/mensual")
     public List<TiempoEstudioDiaDTO> traerTiempoMes(
-            @PathVariable Long idUsuario,
+            HttpServletRequest request,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
 
-        return service.traerTiempoMes(idUsuario, fecha);
+        Long userId = (Long) request.getAttribute("userId");
+        return service.traerTiempoMes(userId, fecha);
     }
 
     // Tiempo anual
-    @GetMapping("/anual/{idUsuario}")
+    @GetMapping("/anual")
     public List<TiempoEstudioDiaDTO> traerTiempoAnio(
-            @PathVariable Long idUsuario,
+            HttpServletRequest request,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
 
-        return service.traerTiempoAnio(idUsuario, fecha);
+        Long userId = (Long) request.getAttribute("userId");
+        return service.traerTiempoAnio(userId, fecha);
     }
+
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<?> actualizar(
             @PathVariable Long id,
