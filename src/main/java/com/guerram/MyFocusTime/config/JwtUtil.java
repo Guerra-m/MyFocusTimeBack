@@ -2,6 +2,7 @@ package com.guerram.MyFocusTime.config;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -12,9 +13,7 @@ public class JwtUtil {
 
     private final Key SECRET_KEY;
 
-    public JwtUtil() {
-        // Clave secreta hardcodeada (para desarrollo)
-        String secret = "Q8v#pT2wL9z!rF4xD7yM3kH6nU1sB0jA"; // <- reemplaza por la que quieras
+    public JwtUtil(@Value("${jwt.secret}") String secret) {
         SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes());
     }
 

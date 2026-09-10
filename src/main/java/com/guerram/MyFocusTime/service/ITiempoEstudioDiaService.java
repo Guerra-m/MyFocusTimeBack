@@ -12,4 +12,5 @@ public interface ITiempoEstudioDiaService {
     List<TiempoEstudioDiaDTO> traerTiempoAnio(Long idUsuario, LocalDate fechaReferencia);
     //Analizar si lo voy a usar o no.
     TiempoEstudioDiaDTO actualizarTiempo(Long userId, Long id, TiempoEstudioDiaDTO dto);
+    double traerHorasTotales(Long idUsuario);
 }

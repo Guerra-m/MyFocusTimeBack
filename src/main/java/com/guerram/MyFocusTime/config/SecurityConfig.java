@@ -28,7 +28,7 @@ public class SecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of(
                             "http://localhost:5173",
-                            "https://recordpomotime.vercel.app"
+                            "https://myfocustrack.vercel.app"
                     ));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
@@ -36,7 +36,7 @@ public class SecurityConfig {
                     return config;
                 }))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/usuarios/login", "/usuarios/register").permitAll()
+                        .requestMatchers("/usuarios/login", "/usuarios/register", "/usuarios/google").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

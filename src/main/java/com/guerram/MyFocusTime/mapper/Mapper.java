@@ -16,6 +16,7 @@ public class Mapper {
                 .name(usuario.getName())
                 .rol(usuario.getRol())
                 .mail(usuario.getMail())
+                .username(usuario.getUsername())
                 .build();
     }
 

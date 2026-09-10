@@ -3,21 +3,27 @@ package com.guerram.MyFocusTime.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-
-public class Usuario {
+public class Amistad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String mail;
-    private String password;
+
+    @ManyToOne
+    private Usuario solicitante;
+
+    @ManyToOne
+    private Usuario receptor;
+
     @Enumerated(EnumType.STRING)
-    private Rol rol;
-    @Column(unique = true)
-    private String username;
+    private EstadoAmistad estado;
+
+    private LocalDateTime creado;
+    private LocalDateTime actualizado;
 }

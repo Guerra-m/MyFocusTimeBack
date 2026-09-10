@@ -1,6 +1,8 @@
 package com.guerram.MyFocusTime.service;
 
 import com.guerram.MyFocusTime.dto.TiempoEstudioDiaDTO;
+import com.guerram.MyFocusTime.exception.AccesoDenegadoException;
+import com.guerram.MyFocusTime.exception.RecursoNoEncontradoException;
 import com.guerram.MyFocusTime.mapper.Mapper;
 import com.guerram.MyFocusTime.model.TiempoEstudioDia;
 import com.guerram.MyFocusTime.model.Usuario;
@@ -70,11 +72,11 @@ public class TiempoEstudioDiaService implements ITiempoEstudioDiaService {
     @Override
     public TiempoEstudioDiaDTO actualizarTiempo(Long userId, Long id, TiempoEstudioDiaDTO dto) {
         TiempoEstudioDia entity = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Registro no encontrado"));
 
         // Validación de seguridad: el registro pertenece al usuario autenticado
         if (!entity.getUsuario().getId().equals(userId)) {
-            throw new RuntimeException("No puedes editar registros de otro usuario");
+            throw new AccesoDenegadoException("No podés editar registros de otro usuario");
         }
 
         entity.setFecha(dto.getFecha());
@@ -83,6 +85,10 @@ public class TiempoEstudioDiaService implements ITiempoEstudioDiaService {
         return Mapper.toDto(repo.save(entity));
     }
 
-
+    @Override
+    public double traerHorasTotales(Long idUsuario) {
+        Double minutos = repo.sumMinutosByUsuarioId(idUsuario);
+        return (minutos == null ? 0.0 : minutos) / 60.0;
+    }
 
 }

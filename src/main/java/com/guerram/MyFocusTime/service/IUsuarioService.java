@@ -10,4 +10,6 @@ public interface IUsuarioService {
     UsuarioDTO traerUsuario(Long id);
     Usuario traerUsuarioEntity(Long id);
     UsuarioDTO login (String mail, String password);
+    UsuarioDTO loginConGoogle(String idToken);
+    UsuarioDTO actualizarUsername(Long userId, String username);
 }
